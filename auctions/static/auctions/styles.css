@@ -1,0 +1,83 @@
+/*body {
+    padding: 10px;
+}*/
+
+.picslist {
+    width: 200px;
+    margin-top: 40px;
+}
+
+.picsproduct {
+    width: 400px;
+}
+
+.cardlist {
+    margin: 20px;
+}
+
+.pricelist {
+    font-size: 18px;
+}
+
+.margintop40 {
+    margin-top: 40px;
+}
+
+.textwhiteish {
+    color: rgba(255,255,255,.5);
+}
+
+h1, h4 {
+    margin-top: 10px !important;
+    margin-bottom: 40px !important;
+}
+
+a {
+    color: #dc3545;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #dc3545;
+    opacity: 0.7;
+}
+
+.loginout
+{
+    /* Center form controls */
+    display: inline-block;
+
+    /* Override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+.commentbox {
+    margin: 40px 20px 20px 20px;
+}
+
+.font24 {
+    font-size: 24px;
+}
+
+.btn-watchlist {
+    margin-left:30px;
+    display:inline;
+}
+
+.width20 {
+    width: 20%;
+}
+
+
+/* To hide the arrows on the number inputs */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

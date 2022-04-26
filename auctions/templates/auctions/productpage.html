@@ -1,0 +1,106 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Auctions · {{ product.title }}
+{% endblock %}
+
+{% block body %}
+    <h1>
+        {{ product.title}}
+
+        {% if active %}
+            {% if user.is_authenticated and not author %}
+                {% if watchlist %}
+                    <span><a class="btn btn-danger btn-sm btn-watchlist" href="{% url 'watchlistaddremove' product.title %}">Remove from Watchlist</a></span>
+                {% else %}
+                    <span><a class="btn btn-danger btn-sm btn-watchlist" href="{% url 'watchlistaddremove' product.title %}">Add to Watchlist</a></span>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    </h1>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <img src="{{ product.image }}" alt="{{ product.title }}" class="mx-auto d-block picsproduct">
+        </div>
+        <div class="col-sm-6">
+            <p class="text-right small"><a href="../categories/{{ product.category.category }}">{{ product.category }}</a></p>
+            <p class="pt-2">{{ product.description }}</p>
+
+            {% if active and author %}
+                <p class="small"><em>-- Posted by you!</em>&nbsp;&nbsp;&nbsp;<a href="{% url 'closelisting' product.title %}">close auction</a></p>
+            {% elif active and not author %}
+                <p class="small"><em>-- Posted by {{ product.user_id }}</em></p>
+            {% endif %}
+
+            <p class="pt-4 pb-3 font-weight-bold">Starting price: $ {{ product.price }}</p>
+            {% if active %}
+                {% if product.current_bid > product.price %}
+                    <p class="font-weight-bold font24">Last bid: $ {{ product.current_bid }}</p>
+                {% else %}
+                    <p>No bids yet!</p>
+                {% endif %}
+            {% else %}
+                <p>This listing is closed. The last bid was of <b>$ {{ product.current_bid }}</b>.</p>
+                {% if winnerlogged  %}
+                    <p class="font24 font-weight-bold mt-4 text-danger">Congratulations! You won!</p>
+                {% elif author %}
+                    <p class="font24 font-weight-bold mt-4">The winner is {{ winnerforauthor }}</p>
+                {% endif %}
+            {% endif %}
+
+            {% if active %}
+                {% if author %}
+                    <p class="mt-4">Bidding is open, but you can't bid on your own auction.</p>
+                {% else %}
+                    <form action="{% url 'bidding' product.title %}" method="get" class="form-inline pt-4">
+                        {% csrf_token %}
+                        <label for="bid" class="mb-2 mr-sm-2">Enter your bid:</label>
+                        <input type="number" id="bid" name="bid" class="form-control  mb-2 mr-sm-2">
+                        <input type="submit" value="Submit" class="btn btn-danger  mb-2 mr-sm-2">
+                        {% if error %}
+                            <p><b>{{ error }}</b></p>
+                        {% endif %}
+                    </form>
+                    {% if not user.is_authenticated %}
+                        <p class="small text-right pr-5">You must be logged in to bid.</p>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <hr>
+    <div class="my-5">
+        <h4>Comments:</h4>
+        {% for comment in comments %}
+            <div class="card bg-light text-dark cardlist">
+                <div class="card-body">
+                    <p class="card-text">{{ comment.comment }}</p>
+                    <p class="text-right small"><em>-- Posted by {{ comment.user_id }}</em></p>
+                </div>
+            </div>
+        {% empty %}
+            <p>No comments yet. Be the first to comment on this product!</p>
+        {% endfor %}
+
+        {% if active %}
+            <div class="commentbox mb-5">
+                {% if not user.is_authenticated %}
+                    <p class="small">You must be logged in to comment.</p>
+                {% else %}
+                    <form action="{% url 'comments' product.title %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea type="text" id="comment" name="comment" class="form-control" placeholder="Post a comment"></textarea>
+                        </div>
+                        <input type="submit" value="Post" class="btn btn-danger float-right">
+                    </form>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>Comments are not allowed on closed listings.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

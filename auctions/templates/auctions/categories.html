@@ -1,0 +1,65 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Auctions · Categories
+{% endblock %}
+
+{% block body %}
+    <h1>
+        {% if category %}
+            {{ category }}
+        {% else %}
+            Categories
+        {% endif %}
+    </h1>
+
+    {% if category %}
+        {% for product in products %}
+            <div class="card bg-light text-dark cardlist">
+                <div class="card-body row">
+                    <div class="col-sm-4">
+                        <img src="{{ product.image }}" alt="{{ product.title }}" class="mx-auto d-block picslist">
+                    </div>
+                    <div class="col-sm-8">
+                        <h4 class="card-title font-weight-bold">{{ product.title }}</h4>
+                        <p class="card-text">{{ product.description }}</p>
+                        <p class="text-right small"><em>-- Posted by {{ product.user_id }}</em></p>
+                        <div class="row margintop40">
+                            <div class="col-sm-6">
+                                {% if product.current_bid > product.price %}
+                                    <p class="pricelist">
+                                        <b>Last bid: $ {{ product.current_bid }}</b>
+                                        <br/>
+                                        <span class="small">Starting price: $ {{ product.price }}</span>
+                                    </p>
+                                {% else %}
+                                    <p class="pricelist font-weight-bold">
+                                        <b>Starting price: $ {{ product.price }}</b>
+                                        <br/>
+                                        <span class="small">Be the first bidder!</span>
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div class="col-sm-6 align-self-end">
+                                <p class="text-right" style="vertical-align: baseline;">
+                                    <a href="{% url 'productpage' product.title %}" class="btn bg-danger text-light">See Details and Bid!</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}        
+        <div class="card-columns">
+            {% for element in categories %}
+                <div class="card bg-light">
+                <div class="card-body text-center">
+                    <p class="card-text"><a href="categories/{{ element.category }}">{{ element.category }}</a></p>
+                </div>
+                </div>
+            {% endfor %}
+          </div>
+    {% endif %}
+
+{% endblock %}

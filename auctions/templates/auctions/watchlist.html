@@ -1,0 +1,70 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Auctions · Watchlist
+{% endblock %}
+
+{% block body %}
+    <h1>Watchlist</h1>  
+
+    {% for prod in prods %}
+        <div class="card bg-light text-dark cardlist">
+            <div class="card-body row">
+                <div class="col-sm-4">
+                    <img src="{{ prod.image }}" alt="{{ prod.title }}" class="mx-auto d-block picslist">
+                </div>
+                <div class="col-sm-8">
+                    <h4 class="card-title font-weight-bold">{{ prod.title }}</h4>
+                    <p class="card-text">{{ prod.description }}</p>
+                    <p class="text-right small"><em>-- Posted by {{ prod.user_id }}</em></p>
+                    <div class="row margintop40">
+                        <div class="col-sm-6">
+                            {% if prod.status %}
+                                
+                                {% if prod.current_bid > prod.price %}
+                                    <p class="pricelist">
+                                        <b>Last bid: $ {{ prod.current_bid }}</b>
+                                        <br/>
+                                        <span class="small">Starting price: $ {{ prod.price }}</span>
+                                    </p>
+                                {% else %}
+                                    <p class="pricelist font-weight-bold">
+                                        <b>Starting price: $ {{ prod.price }}</b>
+                                        <br/>
+                                        <span class="small">Be the first bidder!</span>
+                                    </p>
+                                {% endif %}
+
+                            {% else %}
+
+                                <p>This listing is closed.</p>
+                                {% if prod.current_bid > prod.price %}
+                                    <p>The last bid was of: <b>$ {{ prod.current_bid }}</b></p>
+                                {% endif %}
+
+                            {% endif %}           
+                        </div>
+
+                        <div class="col-sm-6 align-self-end">
+
+                            {% if prod.status %}
+                                <p class="text-right" style="vertical-align: baseline;">
+                                    <a href="{% url 'productpage' prod.title %}" class="btn bg-danger text-light">See Details and Bid!</a>
+                                </p>
+                            {% else %}
+                                <p class="text-right" style="vertical-align: baseline;">
+                                    <a href="{% url 'productpage' prod.title %}" class="btn bg-danger text-light">See Details</a><br>
+                                </p>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>You don't have any listings on your Watchlist.</p>
+    {% endfor %}
+
+{% endblock %}
